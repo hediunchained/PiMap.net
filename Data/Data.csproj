@@ -79,9 +79,9 @@
     <Compile Include="Infrastructure\RepositoryBase.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="MAPContext.cs" />
-    <Compile Include="Migrations\201811132001192_v1.cs" />
-    <Compile Include="Migrations\201811132001192_v1.Designer.cs">
-      <DependentUpon>201811132001192_v1.cs</DependentUpon>
+    <Compile Include="Migrations\201811141718008_v1.cs" />
+    <Compile Include="Migrations\201811141718008_v1.Designer.cs">
+      <DependentUpon>201811141718008_v1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,8 +97,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201811132001192_v1.resx">
-      <DependentUpon>201811132001192_v1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201811141718008_v1.resx">
+      <DependentUpon>201811141718008_v1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Web.Mvc;
 
-namespace Domain.Entity
+namespace Models
 {
     public class Organizational_chart
     {
-        [Key]
+        [Key]       
         public int OrganizationalId { get; set; }
         public string Level { get; set; }
         public string Program_Name { get; set; }
@@ -20,10 +21,10 @@ namespace Domain.Entity
         public string AccountManager { get; set; }
         public string Assignment_Manager_Name { get; set; }
         //public virtual Client Client { get; set; }
-        virtual public ICollection<Ressource> Ressources { get; set; }
 
 
         //public virtual Projet Projet { get; set; }
+
 
     }
 }

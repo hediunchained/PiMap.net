@@ -38,22 +38,6 @@ namespace Data.Migrations
                         LockoutEnabled = c.Boolean(nullable: false),
                         AccessFailedCount = c.Int(nullable: false),
                         UserName = c.String(),
-                        ClientId = c.Int(),
-                        ClientType = c.String(),
-                        Category = c.String(),
-                        logoURL = c.String(),
-                        ContractType = c.String(),
-                        Seniority = c.String(),
-                        SkillSet = c.String(),
-                        Holidays = c.String(),
-                        Notes = c.String(),
-                        Resume = c.String(),
-                        Current_mandate = c.String(),
-                        PictureURL = c.String(),
-                        Mandate_History = c.String(),
-                        Rate = c.Int(),
-                        state = c.String(),
-                        Discriminator = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -102,7 +86,7 @@ namespace Data.Migrations
                 .Index(t => t.Users_Id);
             
             CreateTable(
-                "dbo.Mandates",
+                "dbo.Mandate",
                 c => new
                     {
                         MandateID = c.Int(nullable: false, identity: true),
@@ -113,11 +97,11 @@ namespace Data.Migrations
                         RessourceId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.MandateID)
-                .ForeignKey("dbo.Projets", t => t.ProjetID)
+                .ForeignKey("dbo.Projet", t => t.ProjetID)
                 .Index(t => t.ProjetID);
             
             CreateTable(
-                "dbo.Projets",
+                "dbo.Projet",
                 c => new
                     {
                         ProjetID = c.Int(nullable: false, identity: true),
@@ -133,7 +117,7 @@ namespace Data.Migrations
                 .PrimaryKey(t => t.ProjetID);
             
             CreateTable(
-                "dbo.Messages",
+                "dbo.Message",
                 c => new
                     {
                         MessageID = c.Int(nullable: false, identity: true),
@@ -149,7 +133,7 @@ namespace Data.Migrations
                 .PrimaryKey(t => t.MessageID);
             
             CreateTable(
-                "dbo.Organizational_chart",
+                "dbo.Organiational_chart",
                 c => new
                     {
                         OrganizationalId = c.Int(nullable: false, identity: true),
@@ -164,7 +148,7 @@ namespace Data.Migrations
                 .PrimaryKey(t => t.OrganizationalId);
             
             CreateTable(
-                "dbo.Requests",
+                "dbo.Request",
                 c => new
                     {
                         RequestID = c.Int(nullable: false, identity: true),
@@ -180,7 +164,7 @@ namespace Data.Migrations
                         Project_ProjetID = c.Int(),
                     })
                 .PrimaryKey(t => t.RequestID)
-                .ForeignKey("dbo.Projets", t => t.Project_ProjetID)
+                .ForeignKey("dbo.Projet", t => t.Project_ProjetID)
                 .Index(t => t.Project_ProjetID);
             
             CreateTable(
@@ -192,28 +176,77 @@ namespace Data.Migrations
                     })
                 .PrimaryKey(t => t.Id);
             
+            CreateTable(
+                "dbo.Client",
+                c => new
+                    {
+                        Id = c.Int(nullable: false),
+                        ClientId = c.Int(nullable: false),
+                        ClientType = c.String(),
+                        Category = c.String(),
+                        logoURL = c.String(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Users", t => t.Id)
+                .Index(t => t.Id);
+            
+            CreateTable(
+                "dbo.Ressource",
+                c => new
+                    {
+                        Id = c.Int(nullable: false),
+                        RessourceID = c.Int(nullable: false),
+                        ContractType = c.String(),
+                        Seniority = c.String(),
+                        SkillSet = c.String(),
+                        Notes = c.String(),
+                        Resume = c.String(),
+                        PictureURL = c.String(),
+                        state = c.String(),
+                        StartHoliday = c.DateTime(nullable: false),
+                        EndHoliday = c.DateTime(nullable: false),
+                        OrganizationalId = c.Int(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Users", t => t.Id)
+                .ForeignKey("dbo.Ressource", t => t.RessourceID)
+                .ForeignKey("dbo.Organiational_chart", t => t.OrganizationalId)
+                .Index(t => t.Id)
+                .Index(t => t.RessourceID)
+                .Index(t => t.OrganizationalId);
+            
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.Ressource", "OrganizationalId", "dbo.Organiational_chart");
+            DropForeignKey("dbo.Ressource", "RessourceID", "dbo.Ressource");
+            DropForeignKey("dbo.Ressource", "Id", "dbo.Users");
+            DropForeignKey("dbo.Client", "Id", "dbo.Users");
             DropForeignKey("dbo.CustomUserRoles", "Users_Id", "dbo.Users");
             DropForeignKey("dbo.CustomUserLogins", "Users_Id", "dbo.Users");
             DropForeignKey("dbo.CustomUserClaims", "Users_Id", "dbo.Users");
             DropForeignKey("dbo.CustomUserRoles", "CustomRole_Id", "dbo.CustomRoles");
-            DropForeignKey("dbo.Requests", "Project_ProjetID", "dbo.Projets");
-            DropForeignKey("dbo.Mandates", "ProjetID", "dbo.Projets");
-            DropIndex("dbo.Requests", new[] { "Project_ProjetID" });
-            DropIndex("dbo.Mandates", new[] { "ProjetID" });
+            DropForeignKey("dbo.Request", "Project_ProjetID", "dbo.Projet");
+            DropForeignKey("dbo.Mandate", "ProjetID", "dbo.Projet");
+            DropIndex("dbo.Ressource", new[] { "OrganizationalId" });
+            DropIndex("dbo.Ressource", new[] { "RessourceID" });
+            DropIndex("dbo.Ressource", new[] { "Id" });
+            DropIndex("dbo.Client", new[] { "Id" });
+            DropIndex("dbo.Request", new[] { "Project_ProjetID" });
+            DropIndex("dbo.Mandate", new[] { "ProjetID" });
             DropIndex("dbo.CustomUserRoles", new[] { "Users_Id" });
             DropIndex("dbo.CustomUserRoles", new[] { "CustomRole_Id" });
             DropIndex("dbo.CustomUserLogins", new[] { "Users_Id" });
             DropIndex("dbo.CustomUserClaims", new[] { "Users_Id" });
+            DropTable("dbo.Ressource");
+            DropTable("dbo.Client");
             DropTable("dbo.CustomRoles");
-            DropTable("dbo.Requests");
-            DropTable("dbo.Organizational_chart");
-            DropTable("dbo.Messages");
-            DropTable("dbo.Projets");
-            DropTable("dbo.Mandates");
+            DropTable("dbo.Request");
+            DropTable("dbo.Organiational_chart");
+            DropTable("dbo.Message");
+            DropTable("dbo.Projet");
+            DropTable("dbo.Mandate");
             DropTable("dbo.CustomUserRoles");
             DropTable("dbo.CustomUserLogins");
             DropTable("dbo.CustomUserClaims");

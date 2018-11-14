@@ -22,15 +22,15 @@ namespace Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
 
-            //modelBuilder.Entity<Client>().ToTable("Client");
-            //modelBuilder.Entity<Ressource>().ToTable("Ressource");
-            //modelBuilder.Entity<Message>().ToTable("Message");
-            //modelBuilder.Entity<Projet>().ToTable("Projet");
-            //modelBuilder.Entity<Request>().ToTable("Request");
-            //modelBuilder.Entity<Users>().ToTable("Users");
-            //modelBuilder.Entity<Application_Lettre>().ToTable("Application_Lettre");
-            //modelBuilder.Entity<Mandate>().ToTable("Mandate");
-            //modelBuilder.Entity<Organizational_chart>().ToTable("Organiational_chart");
+            modelBuilder.Entity<Client>().ToTable("Client");
+            modelBuilder.Entity<Ressource>().ToTable("Ressource");
+            modelBuilder.Entity<Message>().ToTable("Message");
+            modelBuilder.Entity<Projet>().ToTable("Projet");
+            modelBuilder.Entity<Request>().ToTable("Request");
+            modelBuilder.Entity<Users>().ToTable("Users");
+            modelBuilder.Entity<Application_Lettre>().ToTable("Application_Lettre");
+            modelBuilder.Entity<Mandate>().ToTable("Mandate");
+            modelBuilder.Entity<Organizational_chart>().ToTable("Organiational_chart");
 
             //// Configure StudentId as FK for StudentAddress
 

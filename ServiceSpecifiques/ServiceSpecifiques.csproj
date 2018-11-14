@@ -42,8 +42,10 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="ClientService.cs" />
+    <Compile Include="OrganizationalService.cs" />
     <Compile Include="ProjectService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RessourceService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj">
@@ -58,6 +60,9 @@
       <Project>{9DA202D4-C7AA-4125-829A-DE60BBCDE7B4}</Project>
       <Name>ServicePattern</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

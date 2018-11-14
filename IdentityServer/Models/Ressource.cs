@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,13 +7,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Domain.Entity
+namespace Models
 {
-    public class Ressource : Users
+    public class Ressource:Users
     {
         [Key]
         public int RessourceID { get; set; }
-
+  
         public String ContractType { get; set; }
         public string Seniority { get; set; }
         public string SkillSet { get; set; }
@@ -22,8 +23,13 @@ namespace Domain.Entity
         [DataType(DataType.ImageUrl), Display(Name = "Picture")]
         public string PictureURL { get; set; }
         public String state { get; set; }
-
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [Display(Name = "StartHoliday ")]
         public DateTime StartHoliday { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [Display(Name = "EndHoliday")]
         public DateTime EndHoliday { get; set; }
 
         //public string Holidays { get; set; }
@@ -43,7 +49,7 @@ namespace Domain.Entity
         public int? OrganizationalId { get; set; }
         public virtual Organizational_chart Organizational_chart { get; set; }
 
-        virtual public ICollection<Ressource> Ressources { get; set; }
+        virtual public ICollection<Organizational_chart> Organizational_charts { get; set; }
         public IEnumerable<SelectListItem> Organizationals { get; set; }
 
 
