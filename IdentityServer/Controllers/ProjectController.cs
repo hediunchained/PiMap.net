@@ -4,6 +4,7 @@ using ServiceSpecifiques;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Web.Mvc;
 
 namespace IdentityServer.Controllers
 {
+    [Authorize(Roles = "SuperAdmin")]
     public class ProjectController : Controller
     {
 
@@ -64,7 +66,10 @@ namespace IdentityServer.Controllers
                     Levio_ressource_nb = item.Levio_ressource_nb,
                     PictureURL = item.PictureURL,
                     ClientId = item.ClientId,
-                    ProjetID = item.ProjetID
+                    ProjetID = item.ProjetID,
+                   
+
+
 
                 });
             }
@@ -87,7 +92,7 @@ namespace IdentityServer.Controllers
         // POST: Project/Create
         [HttpPost]
         public ActionResult Create(Project MapProject, HttpPostedFileBase Picture)
-        {
+        {  
             Projet project = new Projet();
 
             project.Name = MapProject.Name;
@@ -99,7 +104,7 @@ namespace IdentityServer.Controllers
             project.PictureURL = MapProject.PictureURL;
             project.PictureURL = Picture.FileName;
             project.ClientId = MapProject.ClientId;
-
+    
 
             serviceProject.Add(project);
             serviceProject.Commit();
@@ -107,7 +112,7 @@ namespace IdentityServer.Controllers
             var path = Path.Combine(Server.MapPath("~/Content/Upload/"), Picture.FileName);
             Picture.SaveAs(path);
             return RedirectToAction("Index");
-
+            
         }
 
         // GET: Project/Edit/5
@@ -156,7 +161,21 @@ namespace IdentityServer.Controllers
         // GET: Project/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Projet p = serviceProject.GetById(id);
+            Projet projet = new Projet
+            {
+                Name = p.Name,
+                Start_Date = p.Start_Date,
+                End_Date = p.End_Date,
+                Adresse = p.Adresse,
+                Total_Ressource_nb = p.Total_Ressource_nb,
+                Levio_ressource_nb = p.Levio_ressource_nb,
+                PictureURL = p.PictureURL,
+                //PictureURL = p.FileName,
+                ClientId = p.ClientId
+
+            };
+            return View(projet);
         }
 
         // POST: Project/Delete/5

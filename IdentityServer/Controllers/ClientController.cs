@@ -2,6 +2,7 @@
 using ServiceSpecifiques;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
@@ -22,13 +23,52 @@ namespace IdentityServer.Controllers
         // GET: Client
         public ActionResult Index()
         {
-            return View();
+            var Client = serviceClient.GetAll();
+            List<Client> fVM = new List<Client>();
+            foreach (var item in Client)
+            {
+                fVM.Add(new Client
+                {
+                    UserName = item.UserName,
+                    FirstName = item.FirstName,
+                    LastName = item.LastName,
+                    ClientType = item.ClientType,
+                    Category = item.Category,
+                    logoURL = item.logoURL
+
+
+
+                });
+            }
+            return View(fVM);
         }
 
-        // GET: Client/Details/5
-        public ActionResult Details(int id)
+        [HttpPost]
+        public ActionResult Index(string searchString)
         {
-            return View();
+            var Client = serviceClient.GetAll();
+            List<Client> fVM = new List<Client>();
+            foreach (var item in Client)
+            {
+                fVM.Add(new Client
+                {
+                    UserName=item.UserName,
+                    FirstName = item.FirstName,
+                    LastName = item.LastName,
+                    ClientType = item.ClientType,
+                    Category = item.Category,
+                    logoURL = item.logoURL
+
+
+
+                });
+            }
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                fVM = fVM.Where(m => m.UserName.Contains(searchString)).ToList();
+            }
+
+            return View(fVM);
         }
 
         // GET: Client/Create
@@ -41,9 +81,9 @@ namespace IdentityServer.Controllers
 
             //ViewData["Type"] = new SelectList(ClientTypes);
 
-            List<string> Categories = new List<string> { "Public", "Private" };
+            //List<string> Categories = new List<string> { "Public", "Private" };
 
-            ViewData["Category"] = new SelectList(Categories);
+            //ViewData["Category"] = new SelectList(Categories);
 
 
 
@@ -53,41 +93,31 @@ namespace IdentityServer.Controllers
         [HttpPost]
         public ActionResult Create(Client MapClient, HttpPostedFileBase logo)
         {
-            MapClient.logoURL = logo.FileName;
-            //List<string> ClientTypes = new List<string> { "Current_type", "New_Client", "Finished_Contract" };
-
-            //ViewData["Type"] = new SelectList(ClientTypes);
-
-            //List<string> Categories = new List<string> { "Public", "Private" };
-
-            //ViewData["Category"] = new SelectList(Categories);
+           
             try
             {
+                Client client = new Client();
 
-                
-
-                serviceClient.Add(MapClient);
+                MapClient.logoURL = logo.FileName;
+                serviceClient.Add(client);
                 serviceClient.Commit();
-
-                
             }
             catch (DbEntityValidationException dbEx)
             {
-                var errorList = new List<string>();
-
                 foreach (var validationErrors in dbEx.EntityValidationErrors)
                 {
                     foreach (var validationError in validationErrors.ValidationErrors)
                     {
-                        errorList.Add(String.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage));
+                        System.Console.WriteLine("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
                     }
                 }
-                return Json(errorList);
             }
+
+
             var path = Path.Combine(Server.MapPath("~/Content/Upload/"), logo.FileName);
             logo.SaveAs(path);
             //return RedirectToAction("Index");
-            return View();
+            return RedirectToAction("Index");
         }
 
         // GET: Client/Edit/5
@@ -115,7 +145,19 @@ namespace IdentityServer.Controllers
         // GET: Client/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Client item = serviceClient.GetById(id);
+            Client client = new Client
+                {
+                    UserName = item.UserName,
+                    FirstName = item.FirstName,
+                    LastName = item.LastName,
+                    ClientType = item.ClientType,
+                    Category = item.Category,
+                    logoURL = item.logoURL
+
+                };
+            
+            return View(client);
         }
 
         // POST: Client/Delete/5
@@ -124,14 +166,18 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
+                Client client = serviceClient.GetById(id);
 
-                return RedirectToAction("Index");
+                serviceClient.Delete(client);
+                serviceClient.Commit();
             }
-            catch
+            catch (DataException/* dex */)
             {
-                return View();
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                return RedirectToAction("Delete", new { ProjetID = id, saveChangesError = true });
             }
+
+            return RedirectToAction("index");
         }
     }
 }

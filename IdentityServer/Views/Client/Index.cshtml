@@ -1,17 +1,15 @@
-﻿@using Microsoft.AspNet.Identity
-@model IdentityServer.Models.Project
+﻿@model IEnumerable<Domain.Entity.Client>
 
 @{
     Layout = null;
 }
-
 <!doctype html>
 <html lang="en">
 
 
-<!-- Mirrored from thememakker.com/templates/lucid/hr/html/light/project-add.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 04 Nov 2018 11:31:17 GMT -->
+<!-- Mirrored from thememakker.com/templates/lucid/hr/html/light/project-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 04 Nov 2018 11:31:19 GMT -->
 <head>
-    <title>:: Lucid HR :: Project Add</title>
+    <title>:: Lucid HR :: Projects List</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -22,16 +20,17 @@
     <!-- VENDOR CSS -->
     <link rel="stylesheet" href="~/Content/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/Content/vendor/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="~/Content/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
-    <link rel="stylesheet" href="~/Content/vendor/bootstrap-multiselect/bootstrap-multiselect.css">
-    <link rel="stylesheet" href="~/Content/vendor/summernote/dist/summernote.css" />
-    <link rel="stylesheet" href="~/Content/vendor/dropify/css/dropify.min.css">
+    <link rel="stylesheet" href="~/Content/vendor/sweetalert/sweetalert.css" />
+    <link rel="stylesheet" href="~/Content/vendor/jquery-datatable/dataTables.bootstrap4.min.css">
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="~/Content/css/main.css">
     <link rel="stylesheet" href="~/Content/css/color_skins.css">
 </head>
+
 <body class="theme-orange">
+
+
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
         <div class="loader">
@@ -40,10 +39,6 @@
         </div>
     </div>
     <!-- Overlay For Sidebars -->
-
- @using (Html.BeginForm("Create", "Project", FormMethod.Post, new { enctype = "multipart/form-data" }))
- {
-     @Html.AntiForgeryToken()
 
     <div id="wrapper">
 
@@ -58,10 +53,7 @@
                 </div>
 
                 <div class="navbar-right">
-                    @*<form id="navbar-search" class="navbar-form search-form">
-                        <input value="" class="form-control" placeholder="Search here..." type="text">
-                        <button type="button" class="btn btn-default"><i class="icon-magnifier"></i></button>
-                    </form>*@
+
 
                     <div id="navbar-menu">
                         <ul class="nav navbar-nav">
@@ -155,22 +147,17 @@
             <div class="sidebar-scroll">
                 <div class="user-account">
                     <img src="~/Content/images/user.png" class="rounded-circle user-photo" alt="User Profile Picture">
-@using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-{
-    @Html.AntiForgeryToken()
                     <div class="dropdown">
-                        <span>Welcome</span>@Html.ActionLink("" + User.Identity.GetUserName() + "", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-
-                         <a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown"><strong>Jessica Doe</strong></a>
+                        <span>Welcome,</span>
+                        <a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown"><strong>Jessica Doe</strong></a>
                         <ul class="dropdown-menu dropdown-menu-right account animated flipInY">
                             <li><a href="page-profile2.html"><i class="icon-user"></i>My Profile</a></li>
                             <li><a href="app-inbox.html"><i class="icon-envelope-open"></i>Messages</a></li>
                             <li><a href="javascript:void(0);"><i class="icon-settings"></i>Settings</a></li>
                             <li class="divider"></li>
-                            <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="icon-power"></i>Logout</a></li>
+                            <li><a href="page-login.html"><i class="icon-power"></i>Logout</a></li>
                         </ul>
                     </div>
-}
                     <hr>
                     <div class="row">
                         <div class="col-4">
@@ -262,8 +249,8 @@
                                 <li class="active">
                                     <a href="#Projects" class="has-arrow"><i class="icon-list"></i><span>Projects</span></a>
                                     <ul>
-                                        <li class="active"><a href="@Url.Action("Create", "Project")">Add Projects</a></li>
-                                        <li><a href="@Url.Action("index", "Project")">Projects List</a></li>
+                                        <li><a href="@Url.Action("Create", "Project")">Add Projects</a></li>
+                                        <li class="active"><a href="project-list.html">Projects List</a></li>
                                         <li><a href="project-detail.html">Projects Detail</a></li>
                                     </ul>
                                 </li>
@@ -480,11 +467,11 @@
                 <div class="block-header">
                     <div class="row">
                         <div class="col-lg-6 col-md-8 col-sm-12">
-                            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Create New Project</h2>
+                            <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> Projects List</h2>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="index.html"><i class="icon-home"></i></a></li>
                                 <li class="breadcrumb-item">Projects</li>
-                                <li class="breadcrumb-item active">Add Project</li>
+                                <li class="breadcrumb-item active">Projects List</li>
                             </ul>
                         </div>
                         <div class="col-lg-6 col-md-4 col-sm-12 text-right">
@@ -512,177 +499,106 @@
                         </div>
                     </div>
                 </div>
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12">
+                        @using (Html.BeginForm())
+                        {
+                            <div>
+                                <form id="navbar-search" class="navbar-form search-form">
+                                    @Html.TextBox("searchString")
+                                    <input type="submit" value="Search" class="btn btn-default" />
+
+                                </form>
+                            </div>
+
+                        }
+                        <div class="card">
+                            <div class="body project_report">
+                                <div class="table-responsive">
+                                    <table class="table table-hover js-basic-example dataTable table-custom m-b-0">
+                                        <thead>
+                                            <tr>
+
+                                                <th>UserName</th>
+                                                <th>LastName</th>
+                                                <th>FirstName</th>
+                                                <th>ClientType</th>
+                                                <th>Logo</th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+
+                                                @foreach (var item in Model)
+                                                {
+                                                    @Html.HiddenFor(modelItem => item.ClientId)
+                                                    
+                                                <tr>
+                                                    
+                                                    <td class="project-title">
+                                                        @Html.DisplayFor(modelItem => item.UserName)
+                                                    </td>
+
+                                                    <td class="project-title">
+                                                        @Html.DisplayFor(modelItem => item.LastName)
+                                                    </td>
+
+                                                    <td class="project-title">
+                                                        @Html.DisplayFor(modelItem => item.FirstName)
+                                                    </td>
+                                                    <td class="project-title">
+                                                        @Html.DisplayFor(modelItem => item.ClientType)
+                                                    </td>
+                                                    <td>  @Html.DisplayFor(modelItem => item.Category)</td>
+                                                   
+                                                    <td>
+                                                        <img src="" data-toggle="tooltip" data-placement="top" title="Team Lead" class="width35 rounded"
+                                                             @{string path = "~/Content/Upload/" + @item.logoURL;}>
+
+                                                        <img src="@Url.Content(path)" width="50" height="50" class="width35 rounded" data-toggle="tooltip" data-placement="top" />
+                                                    </td>
 
 
 
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="card">
-                                <div class="body">
-                                    <div class="row clearfix">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">  
-                                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Project Name*"}  })
-                                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-12">
-                                            <div class="form-group">
-                                               
-                                                @Html.EditorFor(model => model.Adresse, new { htmlAttributes = new { @class = "form-control", placeholder = "Address" } })
-                                                @Html.ValidationMessageFor(model => model.Adresse, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-sm-12">
-                                            <div class="form-group">
-                                            
-                                                @Html.EditorFor(model => model.Start_Date,new { htmlAttributes = new { @class = "form-control", placeholder = "Start date *"}})
-                                                @Html.ValidationMessageFor(model => model.Start_Date, "", new { @class = "text-danger" })                                   
+                                                    <td><span class="badge badge-warning">Pending</span></td>
+                                                    <td class="project-actions">
+                                                        <a href="@Url.Action("Create", "Client")" class="btn btn-sm btn-outline-primary"><i class="icon-eye"></i></a>
+                                                        <a href="@Url.Action("Edit", "Client", new { id=item.ClientId })" class="btn btn-sm btn-outline-success"><i class="icon-pencil"></i></a>
+                                                        <a href="@Url.Action("Delete", "Client", new { id=item.ClientId })" class="btn btn-sm btn-outline-danger js-sweetalert" title="Delete" data-type="confirm"><i class="icon-trash"></i></a>
+                                                    </td>
 
-                                            </div>
-                                            
-                                           
-                                        </div>
-                                        <div class="col-md-3 col-sm-12">
-                                            <div class="form-group">
-                                          
-                                                @Html.EditorFor(model => model.End_Date, new { htmlAttributes = new { @class = "form-control", placeholder = "End date *" } })
-                                                @Html.ValidationMessageFor(model => model.End_Date, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-sm-12">
-                                            <div class="form-group">
-                                               
-
-                                                    @Html.EditorFor(model => model.ClientId, new { htmlAttributes = new { @class = "form-control show-tick", placeholder = "Client ID" } })
-                                                    @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
-                                             
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row clearfix">
-                                        <div class="col-md-3 col-sm-12">
-                                         
-                                            @Html.EditorFor(model => model.Total_Ressource_nb, new { htmlAttributes = new { @class = "form-control",placeholder= "Total_Ressource_nb" } })
-                                            @Html.ValidationMessageFor(model => model.Total_Ressource_nb, "", new { @class = "text-danger" })
-                                        </div>
-                                        <div class="col-md-3 col-sm-12">
-                                            
-                                            @Html.EditorFor(model => model.Levio_ressource_nb, new { htmlAttributes = new { @class = "form-control", placeholder = "Levio_ressource_nb" } })
-                                            @Html.ValidationMessageFor(model => model.Levio_ressource_nb, "", new { @class = "text-danger" })
-                                            
-                                            @*<div class="col-md-3 col-sm-12">
-                                                <label>Type</label>
-                                                <div class="form-group">
-                                                    <select class="form-control show-tick">
-                                                        <option>Select Type</option>
-                                                        <option>Hourly</option>
-                                                        <option>Fixed</option>
-                                                    </select>
-                                                </div>
-                                            </div>*@
-                                            @*<div class="col-md-3 col-sm-12">
-                                                <label>Select Team Lead</label>
-                                                <div class="form-group">
-                                                    <select class="form-control show-tick">
-                                                        <option>Select</option>
-                                                        <option>Marshall Nichols</option>
-                                                        <option>Susie Willis</option>
-                                                        <option>Hossein Shams</option>
-                                                        <option>Fidel Tonn</option>
-                                                        <option>Frank Camly</option>
-                                                        <option>Debra Stewart</option>
-                                                        <option>Tim Hank</option>
-                                                    </select>
-                                                </div>
-                                            </div>*@
-                                            @*<div class="col-md-3 col-sm-12">
-                                                <label>Selet Team</label>
-                                                <div class="form-group">
-                                                    <select id="multiselect3-all" class="multiselect multiselect-custom" multiple="multiple">
-                                                        <option value="multiselect-all">Select All</option>
-                                                        <option value="cheese">Cheese</option>
-                                                        <option value="tomatoes">Tomatoes</option>
-                                                        <option value="mozarella">Mozzarella</option>
-                                                        <option value="mushrooms">Mushrooms</option>
-                                                        <option value="pepperoni">Pepperoni</option>
-                                                        <option value="onions">Onions</option>
-                                                    </select>
-                                                </div>
-                                            </div>*@
+                                                </tr>
 
 
-                                        </div>
+    }
 
-                                        <div class="row clearfix">
-                                            <div class="col-12">
-                                                
-                                                <input @Html.TextBox("Picture", null, new { type = "file" , @class = "dropify" })
-                                                @Html.ValidationMessageFor(model => model.PictureURL, "", new { placeholder = "Upload Image"})/>
-                                              
-                                                <div class="mt-3"></div>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <div class="summernote">
-                                                    Hello there,
-                                                    <br />
-                                                    <p>The toolbar can be customized and it also supports various callbacks such as <code>oninit</code>, <code>onfocus</code>, <code>onpaste</code> and many more.</p>
-                                                    <p>Please try <b>paste some texts</b> here</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <div class="mt-4">
-                                                    <button type="submit" value="Create" class="btn btn-primary">Create</button>
-                                                    <button type="submit" class="btn btn-outline-secondary">Cancel</button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-      </div>
-  </div>
-           
-</div>
 
-
- }
- 
-                <div>
-                    @Html.ActionLink("Back to List", "Index")
                 </div>
+            </div>
 
-                <script src="~/Content//bundles/libscripts.bundle.js"></script>
-                <script src="~/Content//bundles/vendorscripts.bundle.js"></script>
+        </div>
 
-                <script src="~/Content//vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script><!-- bootstrap datepicker Plugin Js -->
-                <script src="~/Content//vendor/bootstrap-multiselect/bootstrap-multiselect.js"></script>
-                <script src="~/Content//vendor/dropify/js/dropify.min.js"></script>
 
-                <script src="~/Content//bundles/mainscripts.bundle.js"></script>
-                <script src="~/Content//vendor/summernote/dist/summernote.js"></script>
-                <script src="~/Content//js/pages/forms/dropify.js"></script>
-                <script>
-                    $('#multiselect3-all').multiselect({
-                        includeSelectAllOption: true,
-                    });
-                </script>
+        <!-- Javascript -->
+        <script src="~/Content/bundles/libscripts.bundle.js"></script>
+        <script src="~/Content/bundles/vendorscripts.bundle.js"></script>
 
-    <script>
-        function DateCheck() {
-            var StartDate = document.getElementById('Start_Date').value;
-            var EndDate = document.getElementById('End_Date').value;
-            var eDate = new Date(End_Date);
-            var sDate = new Date(Start_Date);
-            if (Start_Date != '' && Start_Date != '' && sDate > eDate) {
-                alert("Please ensure that the End Date is greater than or equal to the Start Date.");
-                return false;
-            }
-        }
-    </script>
+        <script src="~/Content/bundles/datatablescripts.bundle.js"></script>
+        <script src="~/Content/vendor/sweetalert/sweetalert.min.js"></script> <!-- SweetAlert Plugin Js -->
 
-</body>
+        <script src="~/Content/bundles/mainscripts.bundle.js"></script>
+        <script src="~/Content/js/pages/tables/jquery-datatable.js"></script>
+        <script src="~/Content/js/pages/ui/dialogs.js"></script>
+        <script src="~/Content/js/pages/treeview/bootstrap-treeview.js"></script>
+    </body>
+
 </html>
-

@@ -57,24 +57,24 @@ namespace IdentityServer
                 role.Name = "SuperAdmin";
                 roleManager.Create(role);
             }
-            if (UserManager.FindByName("SuperAdmin") == null)
-            {
-                var user = new Users
-                {
-                    UserName = "admin@yahoo.com",
+            //if (UserManager.FindByName("SuperAdmin") == null)
+            //{
+            //    var user = new Users
+            //    {
+            //        UserName = "admin@yahoo.com",
 
-                    Email = "admin@yahoo.com",
-                    Password = "Administration1234$"
+            //        Email = "admin@yahoo.com",
+            //        Password = "Administration1234$"
 
-                };
+            //    };
 
-                var chkUser = UserManager.Create(user);
-                if (chkUser.Succeeded)
-                {
-                    var result1 = UserManager.AddToRole(user.Id, "SuperAdmin");
-                }
+            //    var chkUser = UserManager.Create(user);
+            //    if (chkUser.Succeeded)
+            //    {
+            //        var result1 = UserManager.AddToRole(user.Id, "SuperAdmin");
+            //    }
 
-            }
+            //}
         }
     }
 }

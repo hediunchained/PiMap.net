@@ -27,6 +27,7 @@ namespace IdentityServer.Models
         public virtual Client Client { get; set; }
         virtual public ICollection<Mandate> Mandates { get; set; }
         virtual public ICollection<Ressource> Ressources { get; set; }
+  
         //public virtual Organizational_chart Organizational_chart { get; set; }
     }
 }

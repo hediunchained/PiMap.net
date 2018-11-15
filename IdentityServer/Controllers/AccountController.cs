@@ -46,7 +46,7 @@ namespace TestIdentity
                 _signInManager = value;
             }
         }
-
+            
         public ApplicationUserManager UserManager
         {
             get
@@ -147,9 +147,15 @@ namespace TestIdentity
         public ActionResult Register()
         {
             ViewBag.Roles = new SelectList(db.Roles.Where(a => !a.Name.Contains("SuperAdmin")), "Name", "Name");
+            //ViewBag.Roles = new SelectList(db.Roles, "Name", "Name");
             return View();
         }
-     
+        public ActionResult index()
+        {
+            ViewBag.Roles = db.Roles.ToList();
+            return View();
+        }
+
         //
         // POST: /Account/Register
         [HttpPost]
@@ -167,15 +173,16 @@ namespace TestIdentity
                     {
                         UserManager.AddToRole(user.Id, "Client");
                         MAPContext ctx = new MAPContext();
-
-                        //ctx.Medecin.Add(new Medecin  { UserName ="aaaa" });    
-                        ctx.Client.Add(new Domain.Entity.Client { UserName = "Yousri" });
+                        ctx.Client.Add(new Domain.Entity.Client { UserName = model.Email });
+                        return RedirectToAction("Create", "Project");
 
                     }
                     else
                         if (model.Roles == "Ressource")
                     {
-                        UserManager.AddToRole(user.Id, "Ressource");
+                        MAPContext ctx = new MAPContext();
+                        ctx.Ressource.Add(new Domain.Entity.Ressource { UserName = model.Email });
+                        return RedirectToAction("Index", "Home");
 
                     }
                     else if (model.Roles == "Applicant")
@@ -186,6 +193,15 @@ namespace TestIdentity
                         //ApplicantService aps = new ApplicantService();
                         //aps.Add(app);
                         //aps.Commit();
+                    }
+                    else
+                        if (model.Roles == "SuperAdmin")
+                    {
+                        UserManager.AddToRole(user.Id, "SuperAdmin");
+                        MAPContext ctx = new MAPContext(); 
+                        ctx.Users.Add(new Domain.Entity.Users { UserName = model.Email });
+                        return RedirectToAction("Index", "Home");
+
                     }
 
 

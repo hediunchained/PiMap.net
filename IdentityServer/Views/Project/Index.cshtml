@@ -249,7 +249,7 @@
                                     <li class="active">
                                         <a href="#Projects" class="has-arrow"><i class="icon-list"></i><span>Projects</span></a>
                                         <ul>
-                                            <li><a href="project-add.html">Add Projects</a></li>
+                                            <li><a href="@Url.Action("Create", "Project")">Add Projects</a></li>
                                             <li class="active"><a href="project-list.html">Projects List</a></li>
                                             <li><a href="project-detail.html">Projects Detail</a></li>
                                         </ul>
@@ -501,12 +501,17 @@
                     </div>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12">
-                            <form asp-controller="Projet" asp-action="Index">
-                                <p>
-                                    @Html.TextBox("searchString")
-                                    <input type="submit" value="Rechercher" id="recherche" />
-                                </p>
-                            </form>
+                            @using (Html.BeginForm())
+                            {                       
+                                                <div>
+                                                    <form id="navbar-search" class="navbar-form search-form">
+                                                        @Html.TextBox("searchString")
+                                                        <input type="submit" value="Search" class="btn btn-default" />
+                                                        
+                                                        </form>
+                                                   </div>
+
+                            }
                             <div class="card">
                                 <div class="body project_report">
                                     <div class="table-responsive">
